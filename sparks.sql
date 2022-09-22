@@ -1,12 +1,24 @@
 
 ---creating types 
 
-CREATE TYPE gen AS ENUM ('male','female','trans')
+DO $$ BEGIN
+    CREATE or REPLACE TYPE gen AS ENUM ('male','female','trans');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
-CREATE TYPE sub_status AS ENUM ('Active','Rejected')
+
+DO $$ BEGIN
+    CREATE TYPE sub_status AS ENUM ('Active','Rejected');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
 
 ---creating tables
-create table users(
+
+DO $$ BEGIN
+    create table users(
 	id text Primary Key,
 	createdAt timestamp not null, 
     updatedAt timestamp not null,
@@ -24,6 +36,26 @@ create table users(
    income float
 )
 
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+
+
+DO $$ BEGIN
+    create table messages (
+	id text, 
+	createdAt timestamp not null, 
+   message text ,
+   receiverId text not null, 
+   senderId text not null ,
+	Foreign key (receiverId) references users(id),
+	Foreign key (senderId) references users(id)
+)
+
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 create table subscriptions (
 	subs_id bigserial Primary key,
@@ -37,7 +69,8 @@ create table subscriptions (
 )
 
 
-create table messages (
+DO $$ BEGIN
+    create table messages (
 	id text, 
 	createdAt timestamp not null, 
    message text ,
@@ -47,7 +80,17 @@ create table messages (
 	Foreign key (senderId) references users(id)
 )
 
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
 ---creating indexes
 
-create index user_place_idx on user(city ,country); 
+DO $$ BEGIN
+    create index user_place_idx on user(city ,country); 
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+
 
