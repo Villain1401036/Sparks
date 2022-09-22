@@ -74,7 +74,7 @@ x-airflow-common:
 services:
   
   postgres:
-    image: ./database/Dockerfile
+    image: postgres.Dockerfile
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
