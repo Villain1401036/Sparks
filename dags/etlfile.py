@@ -151,7 +151,7 @@ def insert_to_postgres(conn,src_folder,table='users'):
     try:
         # conn = psycopg2.connect(database="redditdatabase", user='rahul', password='pass', host='127.0.0.1', port='5432')
         if conn == None:
-            conn = psycopg2.connect(database="sparksdatabase", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432')
+            conn = psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432')
         
         print("connection to postgres successful")
 
