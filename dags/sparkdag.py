@@ -36,6 +36,8 @@ GCP_conn_id = ''
 bq_project = ''
 bq_dataset = ''
 
+postgres_conn = psycopg2.connect(database="postgres", user='airflow', password='airflow', port='5432')
+
 with DAG(
   'sparks',
   default_args={
@@ -125,7 +127,7 @@ with DAG(
         task_id = 'insert_users_stg',
         python_callable=utils.insert_to_postgres,
          op_kwargs={
-            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'conn': postgres_conn,
             'src_folder':'./data/',
             'table':"users"
         },
@@ -136,7 +138,7 @@ with DAG(
         task_id = 'insert_subs_stg',
         python_callable=utils.insert_to_postgres,
          op_kwargs={
-            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'conn': postgres_conn,
             'src_folder':'./data/',
             'table':"subscriptions"
         },
@@ -147,7 +149,7 @@ with DAG(
         task_id = 'insert_messages_stg',
         python_callable=utils.insert_to_postgres,
          op_kwargs={
-            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'conn':postgres_conn,
             'src_folder':'./data/',
             'table':"messages"
         },
