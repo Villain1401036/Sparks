@@ -167,7 +167,7 @@ with DAG(
         dag=dag)
 
     gcs_to_bq_users = GoogleCloudStorageToBigQueryOperator(
-        task_id='gcs_to_bq',
+        task_id='gcs_to_bq_users',
     bucket='cloud-samples-data',
     source_objects=['bigquery/us-states/us-states.csv'],
     destination_project_dataset_table='sparks-.gcs_to_bq_table',
@@ -179,7 +179,7 @@ with DAG(
     dag=dag)
 
     gcs_to_bq_subscription = GoogleCloudStorageToBigQueryOperator(
-        task_id='gcs_to_bq',
+        task_id='gcs_to_bq_subscription',
     bucket='cloud-samples-data',
     source_objects=['bigquery/us-states/us-states.csv'],
     destination_project_dataset_table='airflow_test.gcs_to_bq_table',
@@ -191,7 +191,7 @@ with DAG(
     dag=dag)
 
     gcs_to_bq_message = GoogleCloudStorageToBigQueryOperator(
-        task_id='gcs_to_bq',
+        task_id='gcs_to_bq_message',
     bucket='cloud-samples-data',
     source_objects=['bigquery/us-states/us-states.csv'],
     destination_project_dataset_table='airflow_test.gcs_to_bq_table',
