@@ -62,7 +62,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
         
         count_file = 1
 
-        if table == 'user':
+        if table == 'users':
             for data in df_user:
                 #clean the dataframe
                 #change the date in timestamp format 
@@ -81,7 +81,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
 
                 write_transformed(data,destfolder,table+str(count_file))
                 count_file += 1
-        elif table == 'subscription':
+        elif table == 'subscriptions':
             for data in df_subs:
                 #clean the dataframe
                 #change the date in timestamp format 
