@@ -36,7 +36,7 @@ GCP_conn_id = ''
 bq_project = ''
 bq_dataset = ''
 
-postgres_conn = psycopg2.connect(database="postgres", user='rahul', password='cherry@07', port='5433')
+postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='127.0.0.1', port='5433'),
 
 with DAG(
   'sparks',
@@ -149,7 +149,7 @@ with DAG(
         task_id = 'insert_messages_stg',
         python_callable=utils.insert_to_postgres,
          op_kwargs={
-            'conn':postgres_conn,
+            'conn': postgres_conn,
             'src_folder':'./data/',
             'table':"messages"
         },
