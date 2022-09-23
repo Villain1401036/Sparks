@@ -63,7 +63,7 @@ x-airflow-common:
     - /home/rahul/Sparks/dags:/opt/airflow/dags
     - /home/rahul/Sparks/logs:/opt/airflow/logs
     - /home/rahul/Sparks/plugins:/opt/airflow/plugins
-  user: "${AIRFLOW_UID:1000}:0"
+  user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -169,9 +169,9 @@ services:
     <<: *airflow-common
     entrypoint: /bin/bash
     # yamllint disable rule:line-length
-    command: 
+    command:
       - -c
-      - db init 
+      - |
         mkdir -p /sources/logs /sources/dags /sources/plugins
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
         exec /entrypoint airflow version
