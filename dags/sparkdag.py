@@ -36,7 +36,7 @@ GCP_conn_id = ''
 bq_project = ''
 bq_dataset = ''
 
-postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='127.0.0.1', port='5433'),
+postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.31', port='5433'),
 
 with DAG(
   'sparks',
