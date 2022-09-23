@@ -2,7 +2,7 @@
 ---creating types 
 
 DO $$ BEGIN
-    CREATE or REPLACE TYPE gen AS ENUM ('male','female','trans');
+    CREATE TYPE gen AS ENUM ('male','female','trans');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
@@ -17,8 +17,8 @@ END $$;
 
 ---creating tables
 
-DO $$ BEGIN
-    create table users(
+
+ create table IF NOT EXISTS users(
 	id text Primary Key,
 	createdAt timestamp not null, 
     updatedAt timestamp not null,
@@ -34,16 +34,10 @@ DO $$ BEGIN
    isSmoking boolean,
    profession text,
    income float
-)
-
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+);
 
 
-
-DO $$ BEGIN
-    create table messages (
+create table IF NOT EXISTS messages (
 	id text, 
 	createdAt timestamp not null, 
    message text ,
@@ -51,13 +45,9 @@ DO $$ BEGIN
    senderId text not null ,
 	Foreign key (receiverId) references users(id),
 	Foreign key (senderId) references users(id)
-)
+);
 
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
-
-create table subscriptions (
+create table if not exists subscriptions (
 	subs_id bigserial Primary key,
 	user_id text not null ,
 	createdDate timestamp not null, 
@@ -66,31 +56,9 @@ create table subscriptions (
 	status sub_status,
 	amount float,
 	Foreign key (user_id) references users(id)
-)
-
-
-DO $$ BEGIN
-    create table messages (
-	id text, 
-	createdAt timestamp not null, 
-   message text ,
-   receiverId text not null, 
-   senderId text not null ,
-	Foreign key (receiverId) references users(id),
-	Foreign key (senderId) references users(id)
-)
-
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+);
 
 ---creating indexes
-
-DO $$ BEGIN
-    create index user_place_idx on user(city ,country); 
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
-
+create index IF NOT EXISTS user_place_idx on users(city ,country);
 
 
