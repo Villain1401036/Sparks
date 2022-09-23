@@ -78,7 +78,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #remove data where there is nan 
                 data = data.dropna(subset=['id'])
 
-                write_transformed(data,destfolder,table)
+                write_transformed(data,destfolder,dest_file=table)
                 print("user transformed")
                 
         elif table == 'subscriptions':
@@ -96,9 +96,9 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
             
                 data.rename(columns={"id":"user_id"})
                 #remove data where there is nan 
-                data = data.dropna(subset=['user_id'])
+                # data = data.dropna(subset=['user_id'])
 
-                write_transformed(data,destfolder,table)
+                write_transformed(data,destfolder,dest_file=table)
                 
         elif table == 'messages':
                 df_mess = pd.json_normalize(filedata , sep="_")
@@ -115,7 +115,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #remove data where there is nan 
                 data = data.dropna(subset=['message_id'])
 
-                write_transformed(data,destfolder,table)
+                write_transformed(data,destfolder,dest_file=table)
                 
 
     except Exception as e:
