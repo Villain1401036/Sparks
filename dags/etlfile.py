@@ -60,10 +60,10 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
 
         df_subs = pd.json_normalize(filedata , record_path=['subscription'],meta=['id'])
         
-        count_file = 1
+        
 
         if table == 'users':
-            for data in df_user:
+            
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
@@ -79,10 +79,11 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #remove data where there is nan 
                 data = data.dropna(subset=['id'])
 
-                write_transformed(data,destfolder,table+str(count_file))
-                count_file += 1
+                write_transformed(data,destfolder,table)
+                print("user transformed")
+                
         elif table == 'subscriptions':
-            for data in df_subs:
+            
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
@@ -97,10 +98,10 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #remove data where there is nan 
                 data = data.dropna(subset=['user_id'])
 
-                write_transformed(data,destfolder,table+str(count_file))
-                count_file += 1
+                write_transformed(data,destfolder,table)
+                
         elif table == 'messages':
-            for data in df_subs:
+            
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
@@ -113,8 +114,8 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #remove data where there is nan 
                 data = data.dropna(subset=['message_id'])
 
-                write_transformed(data,destfolder,table+str(count_file))
-                count_file += 1
+                write_transformed(data,destfolder,table)
+                
 
     except Exception as e:
         print(e)
