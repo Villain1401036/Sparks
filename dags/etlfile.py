@@ -51,21 +51,18 @@ def write_transformed(df , destfolder='/home/rahul/reddit/posts_transformed/', d
         raise e
 
 
-def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/',dtype=None,table='user'):
+def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/',dtype=None,table='users'):
     try:
         file = open(src_file)
         
         filedata  = json.load(file)
         
-        
-
-        
-        
-        
-
         if table == 'users':
                 df_user = pd.json_normalize(filedata,sep='_')
+                
                 data = df_user
+                print(data)
+                print(data.columns)
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')

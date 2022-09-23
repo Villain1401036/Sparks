@@ -95,8 +95,7 @@ with DAG(
         op_kwargs={
             "src_file":'./users.json',
             "destfolder": "./",
-            "table":"users",
-            "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
+            "table":"users"
         },
 
     )
@@ -106,8 +105,7 @@ with DAG(
         op_kwargs={
             "src_file":'./users.json',
             "destfolder": "./",
-            "table":"subscriptions",
-            "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
+            "table":"subscriptions"
         },
 
     )
@@ -117,8 +115,7 @@ with DAG(
         op_kwargs={
             "src_file":'./messages.json',
             "destfolder": "./",
-            "table":"messages",
-            "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
+            "table":"messages"
         },
 
     )
