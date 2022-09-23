@@ -72,7 +72,7 @@ with DAG(
         
         op_kwargs={
             "url":"https://619ca0ea68ebaa001753c9b0.mockapi.io/evaluation/dataengineer/jr/v1/users",
-            "dest_file":"./data/users.json"
+            "dest_file":"./users.json"
         },
         dag=dag
     )
@@ -83,7 +83,7 @@ with DAG(
         
         op_kwargs={
             "url":"https://619ca0ea68ebaa001753c9b0.mockapi.io/evaluation/dataengineer/jr/v1/messages",
-            "dest_file":"./data/users.json"
+            "dest_file":"./users.json"
         },
         dag=dag
     )
@@ -93,8 +93,8 @@ with DAG(
         task_id = 'transform_users',
         python_callable= utils.transformdata_raw,
         op_kwargs={
-            "src_file":'./data/users.json',
-            "destfolder": "./data/",
+            "src_file":'./users.json',
+            "destfolder": "./",
             "table":"users",
             "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
         },
@@ -104,8 +104,8 @@ with DAG(
         task_id = 'transform_subs',
         python_callable= utils.transformdata_raw,
         op_kwargs={
-            "src_file":'./data/users.json',
-            "destfolder": "./data/",
+            "src_file":'./users.json',
+            "destfolder": "./",
             "table":"subscriptions",
             "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
         },
@@ -115,8 +115,8 @@ with DAG(
         task_id = 'transform_messages',
         python_callable= utils.transformdata_raw,
         op_kwargs={
-            "src_file":'./data/messages.json',
-            "destfolder": "./data/",
+            "src_file":'./messages.json',
+            "destfolder": "./",
             "table":"messages",
             "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
         },
@@ -128,7 +128,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./data/',
+            'src_folder':'./',
             'table':"users"
         },
         dag=dag
@@ -139,7 +139,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./data/',
+            'src_folder':'./',
             'table':"subscriptions"
         },
         dag=dag
@@ -150,7 +150,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./data/',
+            'src_folder':'./',
             'table':"messages"
         },
         dag=dag
@@ -158,7 +158,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "./data/",
+        src = "./",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
