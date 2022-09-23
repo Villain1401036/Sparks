@@ -15,7 +15,7 @@ import psycopg2
 
 import sys
 
-sys.path.append('/home/rahul/sparks')
+sys.path.append('/home/rahul/Sparks')
 
 from modules import etlfile as utils
 
