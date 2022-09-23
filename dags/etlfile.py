@@ -56,14 +56,16 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
         file = open(src_file)
         
         filedata  = json.load(file)
-        df_user = pd.json_normalize(filedata,sep='_')
+        
+        
 
-        df_subs = pd.json_normalize(filedata , record_path=['subscription'],meta=['id'])
+        
         
         
 
         if table == 'users':
-            
+                df_user = pd.json_normalize(filedata,sep='_')
+                data = df_user
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
@@ -83,7 +85,8 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 print("user transformed")
                 
         elif table == 'subscriptions':
-            
+                df_subs = pd.json_normalize(filedata , record_path=['subscription'],meta=['id'])
+                data = df_subs
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
@@ -101,7 +104,8 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 write_transformed(data,destfolder,table)
                 
         elif table == 'messages':
-            
+                df_mess = pd.json_normalize(filedata , sep="_")
+                data = df_mess
                 #clean the dataframe
                 #change the date in timestamp format 
                 data["createdAt"] =  data["createdAt"].astype('datetime64')
