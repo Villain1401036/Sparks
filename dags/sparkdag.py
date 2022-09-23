@@ -64,40 +64,99 @@ with DAG(
                 ) as dag:
     #write all the operaters that are to be used
     
-    pull_posts = PythonOperator(
-        task_id='pull_posts',
+    pull_users = PythonOperator(
+        task_id='pull_users',
         python_callable= utils.pull_data,
         
         op_kwargs={
-            "url":"https://latana-data-eng-challenge.s3.eu-central-1.amazonaws.com/allposts.csv",
-            "dest_file":"/home/rahul/reddit/allposts.csv"
+            "url":"https://619ca0ea68ebaa001753c9b0.mockapi.io/evaluation/dataengineer/jr/v1/users",
+            "dest_file":"./data/users.json"
         },
         dag=dag
     )
 
-    transform_posts= PythonOperator(
-        task_id = 'transform_posts',
+    pull_messages = PythonOperator(
+        task_id='pull_messages',
+        python_callable= utils.pull_data,
+        
+        op_kwargs={
+            "url":"https://619ca0ea68ebaa001753c9b0.mockapi.io/evaluation/dataengineer/jr/v1/messages",
+            "dest_file":"./data/users.json"
+        },
+        dag=dag
+    )
+
+
+    transform_users= PythonOperator(
+        task_id = 'transform_users',
         python_callable= utils.transformdata_raw,
-         op_kwargs={
-            "src_file":'/home/rahul/reddit/allposts.csv',
+        op_kwargs={
+            "src_file":'./data/users.json',
+            "destfolder": "./data/",
+            "table":"users",
             "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
         },
 
     )
+    transform_subs= PythonOperator(
+        task_id = 'transform_subs',
+        python_callable= utils.transformdata_raw,
+        op_kwargs={
+            "src_file":'./data/users.json',
+            "destfolder": "./data/",
+            "table":"subscriptions",
+            "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
+        },
 
-    insert_posts_stg=PythonOperator(
-        task_id = 'insert_posts_stg',
-        python_callable=utils.insert_to_STG,
+    )
+    transform_messages= PythonOperator(
+        task_id = 'transform_messages',
+        python_callable= utils.transformdata_raw,
+        op_kwargs={
+            "src_file":'./data/messages.json',
+            "destfolder": "./data/",
+            "table":"messages",
+            "dtype":{"created_utc":int,'score':int,'ups':int,'downs':int,'permalink':str,'id':str,'subreddit_id':str}
+        },
+
+    )
+    
+    insert_users_stg=PythonOperator(
+        task_id = 'insert_users_stg',
+        python_callable=utils.insert_to_postgres,
          op_kwargs={
-            'conn': psycopg2.connect(database="redditdatabase", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
-            'src_folder':'/home/rahul/reddit/posts_transformed/'
+            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'src_folder':'./data/',
+            'table':"users"
+        },
+        dag=dag
+    )
+
+    insert_subs_stg=PythonOperator(
+        task_id = 'insert_subs_stg',
+        python_callable=utils.insert_to_postgres,
+         op_kwargs={
+            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'src_folder':'./data/',
+            'table':"subscriptions"
+        },
+        dag=dag
+    )
+
+    insert_messages_stg=PythonOperator(
+        task_id = 'insert_messages_stg',
+        python_callable=utils.insert_to_postgres,
+         op_kwargs={
+            'conn': psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432'),
+            'src_folder':'./data/',
+            'table':"messages"
         },
         dag=dag
     )
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = LocalSRC,
+        src = "./data/",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
@@ -141,15 +200,12 @@ with DAG(
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
 
-    upsert_table = BigQueryUpsertTableOperator(
-    task_id="upsert_table",
-    dataset_id=bq_dataset,
-    table_resource={
-        "tableReference": {"tableId": "test_table_id"},
-        "expirationTime": (int(time.time()) + 300) * 1000,
-    },
-    )
 
+pull_users >> transform_users >> insert_users_stg 
 
-pull_posts >> transform_posts >> insert_posts_stg >> export_gcs >> [ gcs_to_bq_message , gcs_to_bq_subscription , gcs_to_bq_users ] >> upsert_table
+pull_messages >> transform_messages >> insert_messages_stg 
+
+transform_subs >> insert_subs_stg
+
+[ insert_users_stg, insert_messages_stg ,insert_subs_stg ] >> [  gcs_to_bq_message , gcs_to_bq_subscription , gcs_to_bq_users ] 
     

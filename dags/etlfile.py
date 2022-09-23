@@ -167,6 +167,5 @@ def insert_to_postgres(conn,src_folder,table='users'):
         conn.close()
 
 
-def insert_to_bigquery(conn, ):
-    pass
+
 
