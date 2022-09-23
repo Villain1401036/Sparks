@@ -209,5 +209,5 @@ pull_messages >> transform_messages >> insert_messages_stg
 
 transform_subs >> insert_subs_stg
 
-[ insert_users_stg, insert_messages_stg ,insert_subs_stg ] >> [  gcs_to_bq_message , gcs_to_bq_subscription , gcs_to_bq_users ] 
+[ insert_users_stg, insert_messages_stg ,insert_subs_stg ] >>  gcs_to_bq_message >> gcs_to_bq_subscription >> gcs_to_bq_users 
     
