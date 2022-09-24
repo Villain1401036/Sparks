@@ -154,7 +154,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'/home/rahul/Sparks/data/messages.csv',
+            'src_file':'/home/rahul/Sparks/data/messages.csv',
             'table':"messages",
             "insertcols":['createdAt', 'message', 'receiverId', 'id', 'senderId']
         },
