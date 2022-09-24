@@ -129,7 +129,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_file':'./users.csv',
+            'src_file':'/opt/airflow/users.csv',
             'table':"users",
             'insertcols': "createdAt|updatedAt|firstName|lastName|address|city|country|zipCode|email|birthDate|id|gender|isSmoking|profession|income"
 
