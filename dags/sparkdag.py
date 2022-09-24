@@ -36,7 +36,7 @@ GCP_conn_id = ''
 bq_project = ''
 bq_dataset = ''
 
-postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.31', port='5433'),
+postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.6', port='5433'),
 
 with DAG(
   'sparks',
@@ -95,7 +95,8 @@ with DAG(
         op_kwargs={
             "src_file":'./users.json',
             "destfolder": "./",
-            "table":"users"
+            "table":"users",
+            "colsorder":"createdAt|updatedAt|firstName|lastName|address|city|country|zipCode|email|birthDate|id|gender|isSmoking|profession|income"
         },
 
     )
@@ -105,7 +106,9 @@ with DAG(
         op_kwargs={
             "src_file":'./users.json',
             "destfolder": "./",
-            "table":"subscriptions"
+            "table":"subscriptions",
+            "colsorder":'createdAt|startDate|endDate|status|amount|user_id'
+
         },
 
     )
@@ -115,7 +118,8 @@ with DAG(
         op_kwargs={
             "src_file":'./messages.json',
             "destfolder": "./",
-            "table":"messages"
+            "table":"messages",
+            "colsorder":['createdAt', 'message', 'receiverId', 'id', 'senderId']
         },
 
     )
@@ -125,8 +129,10 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./',
-            'table':"users"
+            'src_file':'./users.csv',
+            'table':"users",
+            'insertcols': "createdAt|updatedAt|firstName|lastName|address|city|country|zipCode|email|birthDate|id|gender|isSmoking|profession|income"
+
         },
         dag=dag
     )
@@ -136,8 +142,9 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./',
-            'table':"subscriptions"
+            'src_folder':'./subscriptions.csv',
+            'table':"subscriptions",
+            'insertcols':'createdAt|startDate|endDate|status|amount|user_id'
         },
         dag=dag
     )
@@ -147,8 +154,9 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./',
-            'table':"messages"
+            'src_folder':'./messages.csv',
+            'table':"messages",
+            "insertcols":['createdAt', 'message', 'receiverId', 'id', 'senderId']
         },
         dag=dag
     )

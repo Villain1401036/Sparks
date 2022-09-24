@@ -51,7 +51,7 @@ def write_transformed(df , destfolder='/home/rahul/reddit/posts_transformed/', d
         raise e
 
 
-def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/',dtype=None,table='users'):
+def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/',dtype=None,table='users',colsorder=None):
     try:
         file = open(src_file)
         
@@ -72,12 +72,17 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 #change the bool/float column to float  so that we can use it later // to category if the column is having a finite set of values
                 data['profile_gender'] = data['profile_gender'].astype('category')
                 data['profile_income'] = data['profile_income'].astype('float')
-                data['country'] = data['profile_income'].astype('category')
-                data['city'] = data['profile_income'].astype('category')
+                data['country'] = data['country'].astype('category')
+                data['city'] = data['city'].astype('category')
             
+
+                data = data.rename(columns={"profile_gender":"gender",'profile_income':'income','profile_isSmoking':'isSmoking','profile_profession':'profession'})
+                
                 #remove data where there is nan 
                 data = data.dropna(subset=['id'])
-
+                if type(colsorder) == str:
+                    colsorder = colsorder.split("|")
+                data = data[colsorder]
                 write_transformed(data,destfolder,dest_file=table)
                 print("user transformed")
                 
@@ -94,10 +99,14 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 data['amount'] = data['amount'].astype('float')
                 data['status'] = data['status'].astype('category')
             
-                data.rename(columns={"id":"user_id"})
+                data = data.rename(columns={"id":"user_id"})
                 #remove data where there is nan 
-                # data = data.dropna(subset=['user_id'])
+                data = data.dropna(subset=['user_id'])
 
+
+                if type(colsorder) == str:
+                    colsorder = colsorder.split("|")
+                data = data[colsorder]
                 write_transformed(data,destfolder,dest_file=table)
                 
         elif table == 'messages':
@@ -111,10 +120,13 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 data['message'] = data['message'].astype('string')
 
 
-                data.rename(columns={"id":"message_id"})
+                # data = data.rename(columns={"id":"message_id"})
                 #remove data where there is nan 
-                data = data.dropna(subset=['message_id'])
+                data = data.dropna(subset=['id'])
 
+                if type(colsorder) == str:
+                    colsorder = colsorder.split("|")
+                data = data[colsorder]
                 write_transformed(data,destfolder,dest_file=table)
                 
 
@@ -124,7 +136,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
         file.close()
 
 
-def execute_insert_bulk(conn, table='users' , insert_cols=[],filename=None): 
+def execute_insert_bulk(conn, table='users' , insert_cols=[],filename=None):
   
     cols = ','.join(insert_cols)
 
@@ -148,21 +160,21 @@ def execute_insert_bulk(conn, table='users' , insert_cols=[],filename=None):
     cursor.close()
 
 
-def insert_to_postgres(conn,src_folder,table='users'):
+def insert_to_postgres(conn,src_file,table='users',insertcols=None):
     #create a conn to the database
     try:
         # conn = psycopg2.connect(database="redditdatabase", user='rahul', password='pass', host='127.0.0.1', port='5432')
         if conn == None:
             conn = psycopg2.connect(database="postgres", user='rahul', password='Cherry@07', host='127.0.0.1', port='5432')
-        
-        print("connection to postgres successful")
+        if conn:
+            print("connection to postgres successful", conn)
 
         #read the csv file and insert it into database
 
-        files = glob.glob(src_folder+"*.csv")
-        for file in files:
-            execute_insert_bulk(conn ,table=table, filename=file )
-        conn.close()
+        if type(insertcols) == str:
+            insertcols = insertcols.split("|")
+        execute_insert_bulk(conn ,table=table, filename=src_file,insert_cols=insertcols )
+        
     except Exception as e:
         raise e
     finally :
