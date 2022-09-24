@@ -94,7 +94,7 @@ with DAG(
         python_callable= utils.transformdata_raw,
         op_kwargs={
             "src_file":'./users.json',
-            "destfolder": "./",
+            "destfolder": "./data/",
             "table":"users",
             "colsorder":"createdAt|updatedAt|firstName|lastName|address|city|country|zipCode|email|birthDate|id|gender|isSmoking|profession|income"
         },
@@ -105,7 +105,7 @@ with DAG(
         python_callable= utils.transformdata_raw,
         op_kwargs={
             "src_file":'./users.json',
-            "destfolder": "./",
+            "destfolder": "./data/",
             "table":"subscriptions",
             "colsorder":'createdAt|startDate|endDate|status|amount|user_id'
 
@@ -117,7 +117,7 @@ with DAG(
         python_callable= utils.transformdata_raw,
         op_kwargs={
             "src_file":'./messages.json',
-            "destfolder": "./",
+            "destfolder": "./data/",
             "table":"messages",
             "colsorder":['createdAt', 'message', 'receiverId', 'id', 'senderId']
         },
@@ -129,7 +129,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_file':'/opt/airflow/users.csv',
+            'src_file':'/home/rahul/Sparks/data/users.csv',
             'table':"users",
             'insertcols': "createdAt|updatedAt|firstName|lastName|address|city|country|zipCode|email|birthDate|id|gender|isSmoking|profession|income"
 
@@ -142,7 +142,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./subscriptions.csv',
+            'src_file':'/home/rahul/Sparks/data/subscriptions.csv',
             'table':"subscriptions",
             'insertcols':'createdAt|startDate|endDate|status|amount|user_id'
         },
@@ -154,7 +154,7 @@ with DAG(
         python_callable=utils.insert_to_postgres,
          op_kwargs={
             'conn': postgres_conn,
-            'src_folder':'./messages.csv',
+            'src_folder':'/home/rahul/Sparks/data/messages.csv',
             'table':"messages",
             "insertcols":['createdAt', 'message', 'receiverId', 'id', 'senderId']
         },
