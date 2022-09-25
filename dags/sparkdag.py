@@ -163,7 +163,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "./data/*.csv",
+        src = "/data/*.csv",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
