@@ -29,14 +29,14 @@ csv_source_folder = "/home/data/sparks/"
 file_delimiter = ";"
 bq_bucket = "sparksnet"
 
-LocalSRC = ''
-CloudDEST = ''
-GCP_conn_id = ''
+LocalSRC = './data/'
+CloudDEST = '/data/'
+GCP_conn_id = 'gcp_conn_default'
 
 bq_project = ''
 bq_dataset = ''
 
-postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.6', port='5433')
+postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.31', port='5433')
 
 with DAG(
   'sparks',
@@ -163,7 +163,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "./",
+        src = "./data/*.csv",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
