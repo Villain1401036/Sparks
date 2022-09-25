@@ -1,3 +1,6 @@
+-- change password for postgres
+
+alter user postgres PASSWORD 'postgres';
 
 ---creating types 
 
@@ -60,5 +63,26 @@ create table if not exists public.subscriptions (
 
 ---creating indexes
 create index IF NOT EXISTS public.user_place_idx on public.users(city ,country);
+
+
+
+---create roles and privilages for PII 
+
+create user test_user PASSWORD 'test_user';
+
+create role bi_analysts ;
+
+REVOKE Usage on SCHEMA public from bi_analysts;
+GRANT bi_analysts TO test_user;
+
+create schema EDW;
+GRANT USAGE ON SCHEMA edw TO bi_analysts;
+create view edw.users as select id ,createdAt, birthdate , city, country, email , gender, issmoking , income from users;
+create view edw.subscriptions as select *  from subscriptions;
+create view edw.messages as select id , senderid , createdat from messages ;
+
+grant SELECT on edw.users to bi_analysts;
+grant SELECT on edw.subscriptions to bi_analysts ;
+grant SELECT on edw.messages to bi_analysts ;
 
 
