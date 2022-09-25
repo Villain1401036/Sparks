@@ -30,7 +30,7 @@ file_delimiter = ";"
 bq_bucket = "sparksnet"
 
 LocalSRC = './data/'
-CloudDEST = '/data/'
+CloudDEST = 'data/'
 GCP_conn_id = 'gcp_conn_default'
 
 bq_project = ''
@@ -163,7 +163,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "/data/*.csv",
+        src = "./data/*.csv",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
