@@ -176,6 +176,8 @@ with DAG(
     bucket=bq_bucket,
     source_objects=['/data/users.csv'],
     gcp_conn_id = GCP_conn_id,
+    field_delimiter="|",
+
     destination_project_dataset_table='sparks-363212.users.users',
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
@@ -183,6 +185,8 @@ with DAG(
     gcs_to_bq_subscription = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_subscription',
     bucket=bq_bucket,
+    field_delimiter="|",
+
     gcp_conn_id = GCP_conn_id,
     source_objects=['/data/subscriptions.csv'],
 
@@ -196,7 +200,7 @@ with DAG(
     bucket=bq_bucket,
     gcp_conn_id = GCP_conn_id,
     source_objects=['/data/messages.csv'],
-    
+    field_delimiter="|",
     destination_project_dataset_table='sparks-363212.users.messages',
    
     write_disposition='WRITE_TRUNCATE',
