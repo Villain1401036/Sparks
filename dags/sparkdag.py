@@ -182,7 +182,7 @@ with DAG(
 
     gcs_to_bq_subscription = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_subscription',
-    bucket='cloud-samples-data',
+    bucket=bq_bucket,
     gcp_conn_id = GCP_conn_id,
     source_objects=['/data/subscriptions.csv'],
 
@@ -193,7 +193,7 @@ with DAG(
 
     gcs_to_bq_message = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_message',
-    bucket='cloud-samples-data',
+    bucket=bq_bucket,
     gcp_conn_id = GCP_conn_id,
     source_objects=['/data/messages.csv'],
     
