@@ -176,6 +176,8 @@ with DAG(
     bucket=bq_bucket,
     source_objects=['/data/users.csv'],
     gcp_conn_id = GCP_conn_id,
+    skip_leading_rows=1,
+
     field_delimiter="|",
     autodetect=True,
     destination_project_dataset_table='sparks-363212.users.users',
@@ -192,7 +194,7 @@ with DAG(
     source_objects=['/data/subscriptions.csv'],
 
     destination_project_dataset_table='sparks-363212.users.subscriptions',
-    
+    skip_leading_rows=1,
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
 
@@ -202,6 +204,7 @@ with DAG(
     gcp_conn_id = GCP_conn_id,
     autodetect=True,
 
+    skip_leading_rows=1,
 
 
     source_objects=['/data/messages.csv'],
