@@ -36,7 +36,7 @@ GCP_conn_id = 'gcp_conn_default'
 bq_project = ''
 bq_dataset = ''
 
-postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.33', port='5433')
+postgres_conn =  psycopg2.connect(database="postgres", user='rahul', password='cherry@07', host='192.168.1.35', port='5433')
 
 with DAG(
   'sparks',
@@ -163,7 +163,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "./data/*.csv",
+        src = "./data/*_bq.csv",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
@@ -174,7 +174,7 @@ with DAG(
     gcs_to_bq_users = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_users',
     bucket=bq_bucket,
-    source_objects=['/data/users.csv'],
+    source_objects=['/data/users_bq.csv'],
     gcp_conn_id = GCP_conn_id,
     skip_leading_rows=1,
 
@@ -191,7 +191,7 @@ with DAG(
     autodetect=True,
 
     gcp_conn_id = GCP_conn_id,
-    source_objects=['/data/subscriptions.csv'],
+    source_objects=['/data/subscriptions_bq.csv'],
 
     destination_project_dataset_table='sparks-363212.users.subscriptions',
     skip_leading_rows=1,
@@ -207,7 +207,7 @@ with DAG(
     skip_leading_rows=1,
 
 
-    source_objects=['/data/messages.csv'],
+    source_objects=['/data/messages_bq.csv'],
     field_delimiter="|",
     destination_project_dataset_table='sparks-363212.users.messages',
     

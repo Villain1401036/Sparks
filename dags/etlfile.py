@@ -51,7 +51,7 @@ def write_transformed(df , destfolder='/home/rahul/reddit/posts_transformed/', d
         raise e
 
 
-def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/',dtype=None,table='users',colsorder=None):
+def transformdata_raw(src_file,destfolder='/home/rahul/Sparks/data',dtype=None,table='users',colsorder=None):
     try:
         file = open(src_file)
         
@@ -76,6 +76,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                 data['city'] = data['city'].astype('category')
             
 
+
                 data = data.rename(columns={"profile_gender":"gender",'profile_income':'income','profile_isSmoking':'isSmoking','profile_profession':'profession'})
                 
                 #remove data where there is nan 
@@ -84,6 +85,11 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                     colsorder = colsorder.split("|")
                 data = data[colsorder]
                 write_transformed(data,destfolder,dest_file=table)
+
+                #for bigquery transformed
+                # remove the PII info from the csv
+                df_filtered = data[[ 'id' ,'createdAt', 'birthdate' , 'city', 'country', 'email' , 'gender', 'issmoking' , 'income' ]]
+                write_transformed(df_filtered,destfolder,dest_file=table+"_bq")
                 print("user transformed")
                 
         elif table == 'subscriptions':
@@ -128,6 +134,12 @@ def transformdata_raw(src_file,destfolder='/home/rahul/reddit/posts_transformed/
                     colsorder = colsorder.split("|")
                 data = data[colsorder]
                 write_transformed(data,destfolder,dest_file=table)
+
+                #for bigquery transformed
+                # remove the PII info from the csv
+                df_filtered = data[['id' , 'senderid' , 'createdat' ]]
+                write_transformed(df_filtered,destfolder,dest_file=table+"_bq")
+                print("user transformed")
                 
 
     except Exception as e:
