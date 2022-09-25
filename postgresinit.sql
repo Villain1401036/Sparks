@@ -86,3 +86,5 @@ grant SELECT on edw.subscriptions to bi_analysts ;
 grant SELECT on edw.messages to bi_analysts ;
 
 
+
+

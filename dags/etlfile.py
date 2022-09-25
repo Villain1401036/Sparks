@@ -88,7 +88,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/Sparks/data',dtype=None,t
 
                 #for bigquery transformed
                 # remove the PII info from the csv
-                df_filtered = data[[ 'id' ,'createdAt', 'birthdate' , 'city', 'country', 'email' , 'gender', 'issmoking' , 'income' ]]
+                df_filtered = data[[ 'id' ,'createdAt', 'birthDate' , 'city', 'country', 'email' , 'gender', 'isSmoking' , 'income' ]]
                 write_transformed(df_filtered,destfolder,dest_file=table+"_bq")
                 print("user transformed")
                 
@@ -137,7 +137,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/Sparks/data',dtype=None,t
 
                 #for bigquery transformed
                 # remove the PII info from the csv
-                df_filtered = data[['id' , 'senderid' , 'createdat' ]]
+                df_filtered = data[['id' , 'senderId' , 'createdAt' ]]
                 write_transformed(df_filtered,destfolder,dest_file=table+"_bq")
                 print("user transformed")
                 
