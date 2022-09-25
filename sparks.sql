@@ -12,7 +12,7 @@ END $$;
 
 
 DO $$ BEGIN
-    CREATE TYPE public.sub_status AS ENUM ('Active','Rejected');
+    CREATE TYPE sub_status AS ENUM ('Active','Rejected');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
@@ -21,7 +21,7 @@ END $$;
 ---creating tables
 
 
- create table IF NOT EXISTS public.users(
+ create table IF NOT EXISTS users(
 	id text Primary Key,
 	createdAt timestamp not null, 
     updatedAt timestamp not null,
@@ -40,7 +40,7 @@ END $$;
 );
 
 
-create table IF NOT EXISTS public.messages (
+create table IF NOT EXISTS messages (
 	id text, 
 	createdAt timestamp not null, 
    message text ,
@@ -50,7 +50,7 @@ create table IF NOT EXISTS public.messages (
 	Foreign key (senderId) references users(id)
 );
 
-create table if not exists public.subscriptions (
+create table if not exists subscriptions (
 	subs_id bigserial Primary key,
 	user_id text not null ,
 	createdDate timestamp not null, 
@@ -62,7 +62,7 @@ create table if not exists public.subscriptions (
 );
 
 ---creating indexes
-create index IF NOT EXISTS public.user_place_idx on public.users(city ,country);
+create index IF NOT EXISTS user_place_idx on users(city ,country);
 
 
 
