@@ -173,37 +173,32 @@ with DAG(
 
     gcs_to_bq_users = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_users',
-    bucket='cloud-samples-data',
-    source_objects=['bigquery/us-states/us-states.csv'],
-    destination_project_dataset_table='sparks-.gcs_to_bq_table',
-    schema_fields=[
-        {'name': 'name', 'type': 'STRING', 'mode': 'NULLABLE'},
-        {'name': 'post_abbr', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ],
+    bucket=bq_bucket,
+    source_objects=['/data/users.csv'],
+    gcp_conn_id = GCP_conn_id,
+    destination_project_dataset_table='sparks-363212.users.users',
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
 
     gcs_to_bq_subscription = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_subscription',
     bucket='cloud-samples-data',
-    source_objects=['bigquery/us-states/us-states.csv'],
-    destination_project_dataset_table='airflow_test.gcs_to_bq_table',
-    schema_fields=[
-        {'name': 'name', 'type': 'STRING', 'mode': 'NULLABLE'},
-        {'name': 'post_abbr', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ],
+    gcp_conn_id = GCP_conn_id,
+    source_objects=['/data/subscriptions.csv'],
+
+    destination_project_dataset_table='sparks-363212.users.subscriptions',
+    
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
 
     gcs_to_bq_message = GoogleCloudStorageToBigQueryOperator(
         task_id='gcs_to_bq_message',
     bucket='cloud-samples-data',
-    source_objects=['bigquery/us-states/us-states.csv'],
-    destination_project_dataset_table='airflow_test.gcs_to_bq_table',
-    schema_fields=[
-        {'name': 'name', 'type': 'STRING', 'mode': 'NULLABLE'},
-        {'name': 'post_abbr', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ],
+    gcp_conn_id = GCP_conn_id,
+    source_objects=['/data/messages.csv'],
+    
+    destination_project_dataset_table='sparks-363212.users.messages',
+   
     write_disposition='WRITE_TRUNCATE',
     dag=dag)
 
