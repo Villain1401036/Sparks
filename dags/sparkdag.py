@@ -163,7 +163,7 @@ with DAG(
 
     export_gcs = LocalFilesystemToGCSOperator(
         task_id="export_gcs",
-        src = "./data/*_bq.csv",
+        src = "./data/*.csv",
         dst = CloudDEST,
         gcp_conn_id = GCP_conn_id,
         bucket=bq_bucket,
@@ -219,7 +219,7 @@ pull_users >> transform_users >> insert_users_stg
 
 pull_messages >> transform_messages >> insert_messages_stg 
 
-transform_subs >> insert_subs_stg
+pull_users >> transform_subs >> insert_subs_stg
 
-[ insert_users_stg, insert_messages_stg ,insert_subs_stg ] >>  gcs_to_bq_message >> gcs_to_bq_subscription >> gcs_to_bq_users 
-    
+[ insert_users_stg, insert_messages_stg ,insert_subs_stg ] >> export_gcs >> [ gcs_to_bq_message >> gcs_to_bq_subscription >> gcs_to_bq_users ]
+
