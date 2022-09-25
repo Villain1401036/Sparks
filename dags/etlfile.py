@@ -37,7 +37,7 @@ def pull_data(url,dest_file):
         raise e
 
 
-def write_transformed(df , destfolder='/home/rahul/reddit/posts_transformed/', dest_file='posts_',writeformat="csv" ):
+def write_transformed(df , destfolder='/home/rahul/reddit/posts_transformed/', dest_file='users',writeformat="csv" ):
     try:
         df.replace("\n",'',regex=True,inplace=True)
         df.replace("\\n",'',regex=True,inplace=True)
@@ -113,7 +113,7 @@ def transformdata_raw(src_file,destfolder='/home/rahul/Sparks/data',dtype=None,t
                 if type(colsorder) == str:
                     colsorder = colsorder.split("|")
                 data = data[colsorder]
-                write_transformed(data,destfolder,dest_file=table)
+                write_transformed(data,destfolder,dest_file=table+"_bq")
                 
         elif table == 'messages':
                 df_mess = pd.json_normalize(filedata , sep="_")
